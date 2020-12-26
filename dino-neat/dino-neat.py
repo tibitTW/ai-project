@@ -52,6 +52,10 @@ def run_game(genomes, config):
         score_text = font.render('Score: '+str(score), True, WHITE)
         window.blit(score_text, (20, 20))
 
+        if score > 1000:
+            print('hi')
+            run = False
+
         gens_text = font.render('Generation: '+str(generation), True, WHITE)
         window.blit(gens_text, (20, 40))
 
