@@ -1,7 +1,7 @@
 from elements import Dino, Cactus
-from color import *
+from color import WHITE
 
-from random import randint, random
+from random import randint
 import pygame as pg
 
 import neat
@@ -115,8 +115,12 @@ def run_game(genomes, config):
 
 if __name__ == "__main__":
     config_path = './config-feedforward.txt'
-    config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
-                                neat.DefaultSpeciesSet, neat.DefaultStagnation, config_path)
+    config = neat.config.Config(
+        neat.DefaultGenome,
+        neat.DefaultReproduction,
+        neat.DefaultSpeciesSet,
+        neat.DefaultStagnation,
+        config_path)
 
     p = neat.Population(config)
 
