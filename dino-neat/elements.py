@@ -17,7 +17,7 @@ GRAVITY = 1
 
 class Dino:
     def __init__(self):
-        self.x = 80
+        self.x = 80 + randint(-10, 10)
         self.y = 320
         self.w = 40
         self.h = 40

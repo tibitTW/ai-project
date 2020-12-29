@@ -5,7 +5,6 @@ from random import randint
 import pygame as pg
 import neat
 
-file = open('data.txt', 'w')
 
 pg.init()
 WIN_WIDTH, WIN_HEIGHT = 640, 480
@@ -67,7 +66,6 @@ def run_game(genomes, config):
         ######################################
         #      algorithms make decisions     #
         ######################################
-        file.write(f'Generation:{generation}\n')
 
         for i, dino in enumerate(dinos):
             cactus_count = len(cactus_list)
@@ -75,20 +73,21 @@ def run_game(genomes, config):
                 output = nets[i].activate([-1, -1])
             elif cactus_count == 1:
                 output = nets[i].activate(
-                    [cactus_list[0].x, -1])
+                    [cactus_list[0].x - dino.x, -1])
             elif cactus_count >= 2:
                 output = nets[i].activate(
-                    [cactus_list[0].x, cactus_list[1].x])
-
-            file.write(f'{i} {output}\n')
+                    [cactus_list[0].x - dino.x,
+                     cactus_list[1].x - dino.x])
 
             i = output[0]
-            if i >= 0:
+            if i > 0:
                 dino.jump()
 
-        file.write('\n')
         ######################################
 
+        #########################################
+        # update cactus, check if dino is alive #
+        #########################################
         for i, cactus in enumerate(cactus_list):
             cactus.update(window)
             if cactus.x < 20:
@@ -98,15 +97,21 @@ def run_game(genomes, config):
             for dino in dinos:
                 if cactus.rect.colliderect(dino.rect):
                     dino.alive = False
+        #########################################
 
+        #######################################
+        #       check remain dino count       #
+        #######################################
         remain_dinos = 0
         for index, dino in enumerate(dinos):
             if dino.alive:
                 remain_dinos += 1
                 dino.update(window)
+
                 genomes[index][1].fitness = score
         if remain_dinos == 0:
             run = False
+        #######################################
 
         remains_text = font.render(
             'Remain dinos:'+str(remain_dinos), True, WHITE)
@@ -135,6 +140,6 @@ if __name__ == "__main__":
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
-    p.run(run_game, 100)
+    p.run(run_game, 200)
 
 pg.quit()
