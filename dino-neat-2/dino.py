@@ -1,7 +1,7 @@
 from elements import Dino, Cactus
-from color import *
+from color import WHITE, RED, GREEN
 
-from random import randint, random
+from random import randint
 import pygame as pg
 
 pg.init()
@@ -22,6 +22,9 @@ def run_game():
     cactus_spawn_time = 1200
     cactus_last_spawn_time = pg.time.get_ticks()
 
+    score = 0
+    highscore = 0
+
     t0 = pg.time.get_ticks()
     run = True
     while run:
@@ -29,8 +32,10 @@ def run_game():
         window.blit(ground, (0, 360))
 
         score = (pg.time.get_ticks() - t0) // 20
-        score_text = font.render('Score: '+str(score), True, WHITE)
+        score_text = font.render(f'Score:{score}', True, WHITE)
+        highscore_text = font.render(f'Highscore:{highscore}', True, WHITE)
         window.blit(score_text, (20, 20))
+        window.blit(highscore_text, (120, 20))
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -53,6 +58,9 @@ def run_game():
 
             if cactus.rect.colliderect(dino.rect):
                 cactus.color = RED
+                t0 = pg.time.get_ticks()
+                highscore = max(highscore, score)
+                score = 0
             else:
                 cactus.color = GREEN
 

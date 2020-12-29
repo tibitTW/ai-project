@@ -1,6 +1,6 @@
 from random import randint
 import pygame as pg
-from color import *
+from color import RED
 
 random_colors = [
     (255, 255, 255),
@@ -17,7 +17,7 @@ GRAVITY = 1
 
 class Dino:
     def __init__(self):
-        self.x = 80
+        self.x = 80 + randint(-10, 10)
         self.y = 320
         self.w = 40
         self.h = 40
@@ -31,7 +31,7 @@ class Dino:
 
     def jump(self):
         if self.y == 320:
-            self.y_speed = -14
+            self.y_speed = -15
 
     def update(self, surface: pg.Surface):
         self.y += self.y_speed

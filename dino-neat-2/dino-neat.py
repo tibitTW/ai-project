@@ -3,8 +3,8 @@ from color import WHITE
 
 from random import randint
 import pygame as pg
-
 import neat
+
 
 pg.init()
 WIN_WIDTH, WIN_HEIGHT = 640, 480
@@ -33,7 +33,6 @@ def run_game(genomes, config):
         # Init dinos
         dinos.append(Dino())
 
-    # dino = Dino()
     cactus_list = [Cactus(600)]
     cactus_spawn_time = 900
     cactus_last_spawn_time = pg.time.get_ticks()
@@ -41,64 +40,78 @@ def run_game(genomes, config):
     global generation
     generation += 1
 
+    score = 0
+
     t0 = pg.time.get_ticks()
     run = True
     while run:
 
+        # make static background
         window.fill((0, 0, 0))
         window.blit(ground, (0, 360))
 
+        # print score
         score = (pg.time.get_ticks() - t0) // 20
         score_text = font.render('Score: '+str(score), True, WHITE)
         window.blit(score_text, (20, 20))
 
+        # print generation number
         gens_text = font.render('Generation: '+str(generation), True, WHITE)
         window.blit(gens_text, (20, 40))
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 run = False
-            # if event.type == pg.KEYDOWN:
-            #     if event.key == pg.K_SPACE:
-            #         dino.jump()
 
-        for index, dino in enumerate(dinos):
+        ######################################
+        #      algorithms make decisions     #
+        ######################################
+
+        for i, dino in enumerate(dinos):
             cactus_count = len(cactus_list)
             if cactus_count == 0:
-                output = nets[index].activate([0, 0])
+                output = nets[i].activate([-1, -1])
             elif cactus_count == 1:
-                output = nets[index].activate(
-                    [cactus_list[0].x, 0])
+                output = nets[i].activate(
+                    [cactus_list[0].x - dino.x, -1])
             elif cactus_count >= 2:
-                output = nets[index].activate(
-                    [cactus_list[0].x, cactus_list[1].x])
+                output = nets[i].activate(
+                    [cactus_list[0].x - dino.x,
+                     cactus_list[1].x - dino.x])
 
-            # i = output.index(max(output))
-            if output[0] == 1:
+            i = output[0]
+            if i > 0:
                 dino.jump()
-            else:
-                pass
 
-        remain_dinos = 0
+        ######################################
+
+        #########################################
+        # update cactus, check if dino is alive #
+        #########################################
         for i, cactus in enumerate(cactus_list):
-
             cactus.update(window)
             if cactus.x < 20:
                 del(cactus_list[i])
+                score += 1
 
-            for index, dino in enumerate(dinos):
-
+            for dino in dinos:
                 if cactus.rect.colliderect(dino.rect):
                     dino.alive = False
+        #########################################
 
-        for i, dino in enumerate(dinos):
+        #######################################
+        #       check remain dino count       #
+        #######################################
+        remain_dinos = 0
+        for index, dino in enumerate(dinos):
             if dino.alive:
                 remain_dinos += 1
                 dino.update(window)
-                genomes[i][1].fitness += 1
 
+                genomes[index][1].fitness = score
         if remain_dinos == 0:
             run = False
+        #######################################
 
         remains_text = font.render(
             'Remain dinos:'+str(remain_dinos), True, WHITE)
@@ -115,12 +128,11 @@ def run_game(genomes, config):
 
 if __name__ == "__main__":
     config_path = './config-feedforward.txt'
-    config = neat.config.Config(
-        neat.DefaultGenome,
-        neat.DefaultReproduction,
-        neat.DefaultSpeciesSet,
-        neat.DefaultStagnation,
-        config_path)
+    config = neat.config.Config(neat.DefaultGenome,
+                                neat.DefaultReproduction,
+                                neat.DefaultSpeciesSet,
+                                neat.DefaultStagnation,
+                                config_path)
 
     p = neat.Population(config)
 
@@ -128,6 +140,6 @@ if __name__ == "__main__":
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
-    p.run(run_game, 100)
+    p.run(run_game, 200)
 
 pg.quit()
