@@ -2,7 +2,6 @@ from constant import WIN_WIDTH, WIN_HEIGHT
 from element import Bird, Tube
 from color import BLACK, WHITE
 
-from random import randint
 import pygame as pg
 import neat
 

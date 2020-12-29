@@ -1,5 +1,5 @@
 from constant import WIN_HEIGHT, WIN_WIDTH, GRAVITY
-from color import WHITE, GREEN
+from color import GREEN
 import pygame as pg
 from random import randint
 
@@ -50,8 +50,8 @@ class Tube:
     def __init__(self):
         self.x = WIN_WIDTH
         y = randint(200, 240)
-        self.y1 = y - 80
-        self.y2 = y + 80
+        self.y1 = y - 60
+        self.y2 = y + 60
         self.w = 60
         self.color = GREEN
         self.x_speed = -5
