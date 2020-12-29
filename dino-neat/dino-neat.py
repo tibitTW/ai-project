@@ -3,8 +3,9 @@ from color import WHITE
 
 from random import randint
 import pygame as pg
-
 import neat
+
+file = open('data.txt', 'w')
 
 pg.init()
 WIN_WIDTH, WIN_HEIGHT = 640, 480
@@ -33,7 +34,6 @@ def run_game(genomes, config):
         # Init dinos
         dinos.append(Dino())
 
-    # dino = Dino()
     cactus_list = [Cactus(600)]
     cactus_spawn_time = 900
     cactus_last_spawn_time = pg.time.get_ticks()
@@ -56,9 +56,6 @@ def run_game(genomes, config):
         score_text = font.render('Score: '+str(score), True, WHITE)
         window.blit(score_text, (20, 20))
 
-        if score > 1000:
-            run = False
-
         # print generation number
         gens_text = font.render('Generation: '+str(generation), True, WHITE)
         window.blit(gens_text, (20, 40))
@@ -66,40 +63,44 @@ def run_game(genomes, config):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 run = False
-            # if event.type == pg.KEYDOWN:
-            #     if event.key == pg.K_SPACE:
-            #         dino.jump()
 
-        # genetic algorithms make decisions
-        for index, dino in enumerate(dinos):
+        ######################################
+        #      algorithms make decisions     #
+        ######################################
+        file.write(f'Generation:{generation}\n')
+
+        for i, dino in enumerate(dinos):
             cactus_count = len(cactus_list)
             if cactus_count == 0:
-                output = nets[index].activate([-1, -1])
+                output = nets[i].activate([-1, -1])
             elif cactus_count == 1:
-                output = nets[index].activate(
+                output = nets[i].activate(
                     [cactus_list[0].x, -1])
             elif cactus_count >= 2:
-                output = nets[index].activate(
+                output = nets[i].activate(
                     [cactus_list[0].x, cactus_list[1].x])
 
+            file.write(f'{i} {output}\n')
+
             i = output[0]
-            if i == 1:
+            if i >= 0:
                 dino.jump()
 
-        for i, cactus in enumerate(cactus_list):
+        file.write('\n')
+        ######################################
 
+        for i, cactus in enumerate(cactus_list):
             cactus.update(window)
             if cactus.x < 20:
                 del(cactus_list[i])
                 score += 1
 
-            for index, dino in enumerate(dinos):
-
+            for dino in dinos:
                 if cactus.rect.colliderect(dino.rect):
                     dino.alive = False
 
         remain_dinos = 0
-        for dino in dinos:
+        for index, dino in enumerate(dinos):
             if dino.alive:
                 remain_dinos += 1
                 dino.update(window)
