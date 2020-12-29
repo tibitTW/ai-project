@@ -54,7 +54,7 @@ class Bird:
 class Tube:
     def __init__(self):
         self.x = WIN_WIDTH
-        y = randint(200, 240)
+        y = randint(160, 320)
         self.y1 = y - 80
         self.y2 = y + 80
         self.w = 60

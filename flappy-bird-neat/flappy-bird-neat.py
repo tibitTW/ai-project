@@ -1,6 +1,6 @@
 from constant import WIN_WIDTH, WIN_HEIGHT
 from element import Bird, Tube
-from color import BLACK, WHITE
+from color import WHITE
 
 import pygame as pg
 import neat
@@ -97,6 +97,9 @@ def run_game(genomes, config):
                 bird.update(window)
                 genomes[i][1].fitness = score
                 remain_birds += 1
+
+        if score > 5000:
+            run = False
 
         remain_birds_text = font.render(
             f'Remain birds: {remain_birds}', True, WHITE)
