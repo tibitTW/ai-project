@@ -1,7 +1,8 @@
 from constant import WIN_HEIGHT, WIN_WIDTH, GRAVITY
-from color import WHITE, GREEN
+from color import GREEN
 import pygame as pg
 from random import randint
+
 
 random_colors = [
     (255, 255, 255),
@@ -20,9 +21,12 @@ class Bird:
         self.h = 40
         self.x = 40
         self.y = (WIN_HEIGHT - self.h) / 2
-        self.color = random_colors[randint(0, 6)]
         self.alive = True
+        self.color = random_colors[randint(0, 6)]
         self.y_speed = 0
+        self.image = pg.image.load('./img/bird.png')
+        self.image = pg.transform.scale(self.image, (60, 40))
+
         self.rect = pg.Rect(self.x, self.y, self.w, self.h)
 
     def __str__(self):
@@ -44,6 +48,7 @@ class Bird:
 
         self.rect.update(self.x, self.y, self.w, self.h)
         pg.draw.rect(surface, self.color, self.rect)
+        # surface.blit(self.image, (self.x-10, self.y))
 
 
 class Tube:

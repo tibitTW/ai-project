@@ -1,7 +1,6 @@
 from constant import WIN_WIDTH, WIN_HEIGHT
 from element import Bird, Tube
 from color import BLACK, WHITE, RED, GREEN
-from random import randint
 import pygame as pg
 # import random
 
@@ -24,7 +23,7 @@ def run_game():
 
     run = True
     while run:
-        window.fill(BLACK)
+        window.fill((0, 183, 235))
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -54,8 +53,7 @@ def run_game():
         time_now = pg.time.get_ticks()
         if time_now - tube_last_spawn_time > tube_spawn_time:
             tube_last_spawn_time = time_now
-            r_num = randint(0, 7)
-            tube_list.append(Tube(120 + r_num*30))
+            tube_list.append(Tube())
             if tube_list[0].x < -20:
                 score += 1
                 del(tube_list[0])

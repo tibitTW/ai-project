@@ -2,7 +2,6 @@ from constant import WIN_WIDTH, WIN_HEIGHT
 from element import Bird, Tube
 from color import BLACK, WHITE
 
-from random import randint
 import pygame as pg
 import neat
 
@@ -42,7 +41,7 @@ def run_game(genomes, config):
 
     run = True
     while run:
-        window.fill(BLACK)
+        window.fill((0, 183, 235))
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
