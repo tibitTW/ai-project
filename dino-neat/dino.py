@@ -1,7 +1,7 @@
 from elements import Dino, Cactus
-from color import *
+from color import WHITE, RED, GREEN
 
-from random import randint, random
+from random import randint
 import pygame as pg
 
 pg.init()

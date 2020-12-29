@@ -1,7 +1,7 @@
 from elements import Dino, Cactus
-from color import *
+from color import WHITE
 
-from random import randint, random
+from random import randint
 import pygame as pg
 
 import neat
@@ -41,21 +41,25 @@ def run_game(genomes, config):
     global generation
     generation += 1
 
+    score = 0
+
     t0 = pg.time.get_ticks()
     run = True
     while run:
 
+        # make static background
         window.fill((0, 0, 0))
         window.blit(ground, (0, 360))
 
+        # print score
         score = (pg.time.get_ticks() - t0) // 20
         score_text = font.render('Score: '+str(score), True, WHITE)
         window.blit(score_text, (20, 20))
 
         if score > 1000:
-            print('hi')
             run = False
 
+        # print generation number
         gens_text = font.render('Generation: '+str(generation), True, WHITE)
         window.blit(gens_text, (20, 40))
 
@@ -66,6 +70,7 @@ def run_game(genomes, config):
             #     if event.key == pg.K_SPACE:
             #         dino.jump()
 
+        # genetic algorithms make decisions
         for index, dino in enumerate(dinos):
             cactus_count = len(cactus_list)
             if cactus_count == 0:
@@ -77,30 +82,28 @@ def run_game(genomes, config):
                 output = nets[index].activate(
                     [cactus_list[0].x, cactus_list[1].x])
 
-            i = output.index(max(output))
+            i = output[0]
             if i == 1:
                 dino.jump()
-            else:
-                pass
 
-        remain_dinos = 0
         for i, cactus in enumerate(cactus_list):
 
             cactus.update(window)
             if cactus.x < 20:
                 del(cactus_list[i])
+                score += 1
 
             for index, dino in enumerate(dinos):
 
                 if cactus.rect.colliderect(dino.rect):
                     dino.alive = False
 
-        for i, dino in enumerate(dinos):
+        remain_dinos = 0
+        for dino in dinos:
             if dino.alive:
                 remain_dinos += 1
                 dino.update(window)
-                genomes[i][1].fitness += 1
-
+                genomes[index][1].fitness = score
         if remain_dinos == 0:
             run = False
 
@@ -119,8 +122,11 @@ def run_game(genomes, config):
 
 if __name__ == "__main__":
     config_path = './config-feedforward.txt'
-    config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
-                                neat.DefaultSpeciesSet, neat.DefaultStagnation, config_path)
+    config = neat.config.Config(neat.DefaultGenome,
+                                neat.DefaultReproduction,
+                                neat.DefaultSpeciesSet,
+                                neat.DefaultStagnation,
+                                config_path)
 
     p = neat.Population(config)
 

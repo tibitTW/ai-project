@@ -1,6 +1,6 @@
 from random import randint
 import pygame as pg
-from color import *
+from color import RED
 
 random_colors = [
     (255, 255, 255),
