@@ -36,7 +36,7 @@ def run_game(genomes, config):
         birds.append(Bird())
 
     tube_list = []
-    tube_spawn_time = 1000
+    tube_spawn_time = 150
     tube_last_spawn_time = 0
 
     t0 = pg.time.get_ticks()
@@ -100,7 +100,7 @@ def run_game(genomes, config):
                 genomes[i][1].fitness = score
                 remain_birds += 1
 
-        if score > 5000:
+        if score > 2000:
             run = False
 
         remain_birds_text = font.render(
@@ -112,7 +112,7 @@ def run_game(genomes, config):
         ###############################
 
         pg.display.update()
-        pg.time.delay(10)
+        # pg.time.delay(8)
 
 
 if __name__ == "__main__":
@@ -129,5 +129,5 @@ if __name__ == "__main__":
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
-    p.run(run_game, 200)
+    p.run(run_game, 150)
     pg.quit()
