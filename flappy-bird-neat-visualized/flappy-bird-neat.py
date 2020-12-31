@@ -4,8 +4,9 @@ from color import WHITE
 
 import pygame as pg
 import os
+from random import randint
 import neat
-from neat import visualize
+import visualize
 
 
 pg.init()
@@ -37,11 +38,10 @@ def run_game(genomes, config):
         birds.append(Bird())
 
     tube_list = []
-    tube_spawn_time = 1000
-    tube_last_spawn_time = pg.time.get_ticks()
+    tube_spawn_time = 200
+    tube_last_spawn_time = 0
 
     t0 = pg.time.get_ticks()
-
     run = True
     while run:
         window.fill((0, 183, 235))
@@ -53,9 +53,10 @@ def run_game(genomes, config):
         ################################
         #         produce tube         #
         ################################
-        time_now = pg.time.get_ticks()
-        if time_now - tube_last_spawn_time > tube_spawn_time:
-            tube_last_spawn_time = time_now
+        tube_last_spawn_time += 1
+        if tube_last_spawn_time > tube_spawn_time:
+            tube_last_spawn_time = 0
+            # tube_spawn_time = randint(400, 600)
             tube_list.append(Tube())
             if tube_list[0].x < -20:
                 del(tube_list[0])
@@ -101,7 +102,7 @@ def run_game(genomes, config):
                 genomes[i][1].fitness = score
                 remain_birds += 1
 
-        if score > 5000:
+        if score > 2000:
             run = False
 
         remain_birds_text = font.render(
@@ -113,7 +114,7 @@ def run_game(genomes, config):
         ###############################
 
         pg.display.update()
-        pg.time.delay(10)
+        # pg.time.delay(10)
 
 
 if __name__ == "__main__":
