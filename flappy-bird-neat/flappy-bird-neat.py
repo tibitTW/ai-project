@@ -3,7 +3,9 @@ from element import Bird, Tube
 from color import WHITE
 
 import pygame as pg
+import os
 import neat
+
 
 pg.init()
 window = pg.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
@@ -35,7 +37,7 @@ def run_game(genomes, config):
 
     tube_list = []
     tube_spawn_time = 1000
-    tube_last_spawn_time = pg.time.get_ticks()
+    tube_last_spawn_time = 0
 
     t0 = pg.time.get_ticks()
 
@@ -50,9 +52,9 @@ def run_game(genomes, config):
         ################################
         #         produce tube         #
         ################################
-        time_now = pg.time.get_ticks()
-        if time_now - tube_last_spawn_time > tube_spawn_time:
-            tube_last_spawn_time = time_now
+        tube_last_spawn_time += 1
+        if tube_last_spawn_time > tube_spawn_time:
+            tube_last_spawn_time = 0
             tube_list.append(Tube())
             if tube_list[0].x < -20:
                 del(tube_list[0])
@@ -114,7 +116,8 @@ def run_game(genomes, config):
 
 
 if __name__ == "__main__":
-    config_path = './config-feedforward.txt'
+    local_dir = os.path.dirname(__file__)
+    config_path = os.path.join(local_dir, 'config-feedforward.txt')
     config = neat.config.Config(neat.DefaultGenome,
                                 neat.DefaultReproduction,
                                 neat.DefaultSpeciesSet,
@@ -126,5 +129,5 @@ if __name__ == "__main__":
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
-    p.run(run_game, 100)
+    p.run(run_game, 200)
     pg.quit()
