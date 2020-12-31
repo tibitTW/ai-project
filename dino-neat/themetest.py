@@ -7,12 +7,15 @@ import matplotlib.pyplot as plt
 'hahaha'
 
 3
-3.3
 3.3e10
 'a'
 'aa'
 abc = 1
 ABC = 1
+abc >= 1
+
+a[1][2] = 3
+f'aaaaa'
 
 
 def fun1(a: int, b=3, c=4):
@@ -22,12 +25,19 @@ def fun1(a: int, b=3, c=4):
 class class1:
     def __init__(self, a, b, c):
         super().__init__()
+        self.i = a
 
+
+c = class1(1, 2, c=3)
+c.i = 1
+'aaa'
 
 1 and 1
-global a
 None
-
+1 == 1
+1 ** 1
+1 + 1
+1 > 1
 while 1:
     pass
     continue
@@ -38,9 +48,6 @@ while True:
 [1, 22, 3, 4]
 (((((((())))))))
 (1+1)
-a = 3
-b = '3'
-a = [1, 2, 3, 4]
 b = class1(1, 1, 1, key1='key1', key2=3)
 # lhafsdfsjlssf;ljas jfls fsfsjfslf sjf sl jsf
 try:
