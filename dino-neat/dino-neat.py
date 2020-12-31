@@ -113,6 +113,9 @@ def run_game(genomes, config):
             run = False
         #######################################
 
+        if score > 2000:
+            run = False
+
         remains_text = font.render(
             'Remain dinos:'+str(remain_dinos), True, WHITE)
         window.blit(remains_text, (20, 60))
