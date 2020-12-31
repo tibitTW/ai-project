@@ -4,7 +4,7 @@ from color import WHITE
 from random import randint
 import pygame as pg
 import neat
-
+import visualize
 
 pg.init()
 WIN_WIDTH, WIN_HEIGHT = 640, 480
@@ -34,8 +34,8 @@ def run_game(genomes, config):
         dinos.append(Dino())
 
     cactus_list = [Cactus(600)]
-    cactus_spawn_time = 900
-    cactus_last_spawn_time = pg.time.get_ticks()
+    cactus_spawn_time = 80
+    cactus_last_spawn_time = 0
 
     global generation
     generation += 1
@@ -46,6 +46,7 @@ def run_game(genomes, config):
     run = True
     while run:
 
+        cactus_last_spawn_time += 1
         # make static background
         window.fill((0, 0, 0))
         window.blit(ground, (0, 360))
@@ -113,17 +114,20 @@ def run_game(genomes, config):
             run = False
         #######################################
 
+        if score > 1500:
+            run = False
+
         remains_text = font.render(
             'Remain dinos:'+str(remain_dinos), True, WHITE)
         window.blit(remains_text, (20, 60))
 
-        if (pg.time.get_ticks() - cactus_last_spawn_time) > cactus_spawn_time:
+        if cactus_last_spawn_time > cactus_spawn_time:
             cactus_list.append(Cactus(640))
-            cactus_last_spawn_time = pg.time.get_ticks()
-            cactus_spawn_time = randint(400, 900)
+            cactus_last_spawn_time = 0
+            cactus_spawn_time = randint(40, 90)
 
         pg.display.update()
-        pg.time.delay(10)
+        # pg.time.delay(5)
 
 
 if __name__ == "__main__":
@@ -140,6 +144,11 @@ if __name__ == "__main__":
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
-    p.run(run_game, 200)
+    winner = p.run(run_game, 200)
+
+    node_names = {-1: 'D1', -2: 'D2', 0: 'Should we jump?'}
+    visualize.draw_net(config, winner, True, node_names=node_names)
+    visualize.plot_stats(stats, ylog=False, view=True)
+    visualize.plot_species(stats, view=True)
 
 pg.quit()
