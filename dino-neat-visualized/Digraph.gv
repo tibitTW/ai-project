@@ -1,0 +1,10 @@
+digraph {
+	node [fontsize=9 height=0.2 shape=circle width=0.2]
+	D1 [fillcolor=lightgray shape=box style=filled]
+	D2 [fillcolor=lightgray shape=box style=filled]
+	"Should we jump?" [fillcolor=lightblue style=filled]
+	749 [fillcolor=white style=filled]
+	D2 -> "Should we jump?" [color=green penwidth=0.7291720883191882 style=dotted]
+	D1 -> "Should we jump?" [color=red penwidth=0.1217354160012358 style=solid]
+	D2 -> 749 [color=green penwidth=0.3482768054524874 style=solid]
+}
